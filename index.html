@@ -9,8 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <!-- LINK TO FIREBASE GOES HERE -->
-  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+    <!-- LINK TO FIREBASE GOES HERE -->
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
 </head>
 ​
 
@@ -73,67 +73,67 @@
         </form>
     </div>
     ​
-    
+
     ​
     <script src="https://code.jquery.com/jquery.js"></script>
     <script>
 
-    // Initialize Firebase
-    var config = {
-    apiKey: "AIzaSyA7g2pilguBrsnbsQ1gazAMI22S4QQEEqU",
-    authDomain: "first-project-43fd1.firebaseapp.com",
-    databaseURL: "https://first-project-43fd1.firebaseio.com",
-    projectId: "first-project-43fd1",
-    storageBucket: "first-project-43fd1.appspot.com",
-    messagingSenderId: "577976484929"
-  };
-  firebase.initializeApp(config);
-    ​
-    var database = firebase.database();
-    ​
-    // Initial Values
-    var name = "";
-    var role = "";
-    var startDate = 0;
-    var monthlyRate = "";
-    ​
-    // Capture Button Click
-    $("#submitButton").on("click", function (event) {
-    event.preventDefault();
-    ​
-    // Grabbed values from text boxes
-    name = $("#employeeName").val().trim();
-    role = $("#employeeRole").val().trim();
-    startDate = $("#employeeStartDate").val().trim();
-    monthlyRate = $("#employeeMonthlyRate").val().trim();
-    ​
-    // Code for handling the push
-    database.ref().push({
-    name: name,
-    role: role,
-    startDate: startDate,
-    monthlyRate: monthlyRate,
-    dateAdded: firebase.database.ServerValue.TIMESTAMP
-    });
-    });
-    ​
-    database.ref().on("child_added", function (childSnapshot) {
-    console.log(childSnapshot.val().name);
-    console.log(childSnapshot.val().role);
-    console.log(childSnapshot.val().startDate);
-    console.log(childSnapshot.val().monthlyRate);
-    console.log(childSnapshot.val().dateAdded);
-    ​
-    var newRow = $("<tr></tr>")
-    newRow.append(`<td id='employeeNameTable'> ${childSnapshot.val().name}</td>`)
-    newRow.append(`<td id='employeeRoleTable'> ${childSnapshot.val().role}</td>`)
-    newRow.append(`<td id='employeeStartDateTable'> ${childSnapshot.val().startDate}</td>`)
-    newRow.append(`<td id='employeeMonthlyRateTable'> ${childSnapshot.val().monthlyRate}</td>`)
-    ​
-    $('#employeeList').append(newRow)
-    ​
-    })
-    ​
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyA7g2pilguBrsnbsQ1gazAMI22S4QQEEqU",
+            authDomain: "first-project-43fd1.firebaseapp.com",
+            databaseURL: "https://first-project-43fd1.firebaseio.com",
+            projectId: "first-project-43fd1",
+            storageBucket: "first-project-43fd1.appspot.com",
+            messagingSenderId: "577976484929"
+        };
+        firebase.initializeApp(config);
+        
+        var database = firebase.database();
+
+        // Initial Values
+        var trainName = "";
+        var destination = "";
+        var firstTrainTime = "14:34";
+        var frequency = "";
+
+        // Capture Button Click
+        $("#submitButton").on("click", function (event) {
+            event.preventDefault();
+
+            // Grabbed values from text boxes
+            trainName = $("#trainName").val().trim();
+            destination = $("#destinationName").val().trim();
+            firstTrainTime = $("#firstTrainTime").val().trim();
+            frequency = $("#frequency").val().trim();
+
+            // Code for handling the push
+            database.ref().push({
+                trainName: trainName,
+                destination: destination,
+                firstTrainTime: firstTrainTime,
+                frequency: frequency,
+                dateAdded: firebase.database.ServerValue.TIMESTAMP
+            });
+        });
+
+    // database.ref().on("child_added", function (childSnapshot) {
+    // console.log(childSnapshot.val().name);
+    // console.log(childSnapshot.val().role);
+    // console.log(childSnapshot.val().startDate);
+    // console.log(childSnapshot.val().monthlyRate);
+    // console.log(childSnapshot.val().dateAdded);
+    // ​
+    // var newRow = $("<tr></tr>")
+    // newRow.append(`<td id='employeeNameTable'> ${childSnapshot.val().name}</td>`)
+    // newRow.append(`<td id='employeeRoleTable'> ${childSnapshot.val().role}</td>`)
+    // newRow.append(`<td id='employeeStartDateTable'> ${childSnapshot.val().startDate}</td>`)
+    // newRow.append(`<td id='employeeMonthlyRateTable'> ${childSnapshot.val().monthlyRate}</td>`)
+    // ​
+    // $('#employeeList').append(newRow)
+    // ​
+    // })
+
     </script>
 </body>
 ​
