@@ -17,9 +17,9 @@
 <body>
     ​
     <div class="container">
-        <div class="jumbotron text-center">
-            <h1 class="display-4">Anytime is Train Time!</h1>
-            <h2 class="display-6">Choo Chooooooooo</h2>
+        <div class="jumbotron text-center bg-primary text-white">
+            <h1 class="display-4">MTA Long Island Railroad Scheduler</h1>
+            <h2 class="display-6">"Disappointing passengers since 1834!"</h2>
         </div>
         ​
         <div class="table-responsive">
@@ -29,31 +29,28 @@
                 </h3>
                 <thead>
                     <tr>
-                        <th>Train Name</th>
+                        <th>Train Line</th>
                         <th>Destination </th>
-                        <th>First Train Time (HH:mm - military time)</th>
                         <th>Frequency (min)</th>
+                        <th>Next Arrival</th>
+                        <th>Minutes Away</th>
                     </tr>
                 </thead>
                 <tbody id="currentTrains">
-                    <tr>
-                        <td id="trainNameTable"></td>
-                        <td id="destinationTable"></td>
-                        <td id="firstTrainTimeTable"></td>
-                        <td id="frequencyTable"></td>
-                    </tr>
+                    
                 </tbody>
             </table>
             <br>
             <h3>
                 Add Train
             </h3>
+            <hr>
         </div>
         ​
         <form class="addTrain">
             <div class="form-group">
-                <label for="exampleFormControlInput1">Train Name</label>
-                <input type="text" class="form-control" id="trainName" placeholder="Long Beach Line">
+                <label for="exampleFormControlInput1">Train Line</label>
+                <input type="text" class="form-control" id="trainLine" placeholder="Long Beach Line">
             </div>
             <div class="form-group">
                 <label for="exampleFormControlInput1">Destination</label>
@@ -65,74 +62,92 @@
             </div>
             <div class="form-group">
                 <label for="exampleFormControlInput1">Frequency (min) </label>
-                <input type="text" class="form-control" id="frequency" placeholder="50 mins">
+                <input type="text" class="form-control" id="frequency" placeholder="50">
             </div>
             ​
-            <button id="submitButton" type="submit" class="button btn p-2">submit</button>
+            <button id="submitButton" type="submit" class="button btn p-2 bg-primary text-white">Submit</button>
             ​
         </form>
     </div>
     ​
 
-    ​
+    ​<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
     <script src="https://code.jquery.com/jquery.js"></script>
     <script>
+       
+    // Initialize Firebase
+    var config = {
+    apiKey: "AIzaSyA7g2pilguBrsnbsQ1gazAMI22S4QQEEqU",
+    authDomain: "first-project-43fd1.firebaseapp.com",
+    databaseURL: "https://first-project-43fd1.firebaseio.com",
+    projectId: "first-project-43fd1",
+    storageBucket: "first-project-43fd1.appspot.com",
+    messagingSenderId: "577976484929"
+    };
+    firebase.initializeApp(config);
 
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyA7g2pilguBrsnbsQ1gazAMI22S4QQEEqU",
-            authDomain: "first-project-43fd1.firebaseapp.com",
-            databaseURL: "https://first-project-43fd1.firebaseio.com",
-            projectId: "first-project-43fd1",
-            storageBucket: "first-project-43fd1.appspot.com",
-            messagingSenderId: "577976484929"
-        };
-        firebase.initializeApp(config);
-        
-        var database = firebase.database();
+    var database = firebase.database();
 
-        // Initial Values
-        var trainName = "";
-        var destination = "";
-        var firstTrainTime = "14:34";
-        var frequency = "";
+    // Initial Values
+    var trainLine = "";
+    var destination = "";
+    var firstTrainTime = "14:34";
+    var frequency = "";
 
-        // Capture Button Click
-        $("#submitButton").on("click", function (event) {
-            event.preventDefault();
+    // Capture Button Click
+    $("#submitButton").on("click", function (event) {
+    event.preventDefault();
 
-            // Grabbed values from text boxes
-            trainName = $("#trainName").val().trim();
-            destination = $("#destinationName").val().trim();
-            firstTrainTime = $("#firstTrainTime").val().trim();
-            frequency = $("#frequency").val().trim();
+    // Grabbed values from text boxes
+    trainLine = $("#trainLine").val().trim();
+    destination = $("#destinationName").val().trim();
+    firstTrainTime = $("#firstTrainTime").val().trim();
+    frequency = $("#frequency").val().trim();
+    $("#trainLine").empty();
+    $("#destinationName").empty();
+    $("#firstTrainTime").empty();
+    $("#firstTrainTime").empty();
+    $("#frequency").empty();
 
-            // Code for handling the push
-            database.ref().push({
-                trainName: trainName,
-                destination: destination,
-                firstTrainTime: firstTrainTime,
-                frequency: frequency,
-                dateAdded: firebase.database.ServerValue.TIMESTAMP
-            });
-        });
+    
+  
+        //values for time difference
+    firstTrainTime = $("#firstTrainTime").val().trim();
+    var firstTimeConverted = moment(firstTrainTime, "HH:mm").subtract(1, "years");
+    console.log(firstTimeConverted);
+    var currentTime = moment();
+    console.log("Current time: " + moment(currentTime).format("hh:mm"));
+    //difference between the times
+    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + diffTime);
+    // Time apart (remainder)
+    var tRemainder = diffTime % frequency;
+    console.log(tRemainder);
+    // Minute Until Train
+    tMinutesTillTrain = frequency - tRemainder;
+    console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+    // Next Train
+    nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
 
-    // database.ref().on("child_added", function (childSnapshot) {
-    // console.log(childSnapshot.val().name);
-    // console.log(childSnapshot.val().role);
-    // console.log(childSnapshot.val().startDate);
-    // console.log(childSnapshot.val().monthlyRate);
-    // console.log(childSnapshot.val().dateAdded);
-    // ​
-    // var newRow = $("<tr></tr>")
-    // newRow.append(`<td id='employeeNameTable'> ${childSnapshot.val().name}</td>`)
-    // newRow.append(`<td id='employeeRoleTable'> ${childSnapshot.val().role}</td>`)
-    // newRow.append(`<td id='employeeStartDateTable'> ${childSnapshot.val().startDate}</td>`)
-    // newRow.append(`<td id='employeeMonthlyRateTable'> ${childSnapshot.val().monthlyRate}</td>`)
-    // ​
-    // $('#employeeList').append(newRow)
-    // ​
-    // })
+    // Code for handling the push
+    database.ref().push({
+    trainLine: trainLine,
+    destination: destination,
+    firstTrainTime: firstTrainTime,
+    frequency: frequency,
+    dateAdded: firebase.database.ServerValue.TIMESTAMP,
+    });
+    });
+
+    database.ref().on("child_added", function (childSnapshot) {
+    var newRow = $("<tr></tr>");
+    newRow.append(`<td> ${childSnapshot.val().trainLine}</td>`);
+    newRow.append(`<td> ${childSnapshot.val().destination}</td>`);
+    newRow.append(`<td> ${childSnapshot.val().frequency}</td>`);
+    console.log(childSnapshot.val().trainLine);
+    $('#currentTrains').append(newRow);
+    })
 
     </script>
 </body>
